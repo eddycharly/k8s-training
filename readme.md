@@ -1,7 +1,6 @@
 
 # k8s-training
 
-
 This repository contains various trainings around kubernetes and the technoligies around it.
 
 Every training session is meant to be simple and short.
