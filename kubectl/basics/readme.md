@@ -38,11 +38,14 @@ refer to the official documentation
 
 ## check installation
 
-run the following command to check install
+execute the following command to check install
 
 ```bash
 kubectl version
 ```
+
+if the command executes, install was successfull, even if errors appear.
+we will have to configure `kubectl` before it order to get it to work.
 
 ## kubectl bash auto completion
 
@@ -74,7 +77,75 @@ refer to the [official documentation](https://kubernetes.io/docs/tasks/tools/ins
 
 ## kubectl configuration
 
+in order to connect to a kubernetes cluster, `kubectl` requires a configuration file.
 
+the default location for the configuration file is `$HOME/.kube/config` but it can be overriden of split over several files if you're working with multiple clusters.
+
+### kubectl configuration file example
+
+the layout of the configuration file is as follows.
+
+```yaml
+apiVersion: v1
+kind: Config
+preferences: {}
+clusters:
+- name: k8s.example.com
+  cluster:
+    certificate-authority-data: ...
+    server: https://k8s.example.com
+contexts:
+- name: k8s.example.com
+  context:
+    cluster: k8s.example.com
+    user: k8s.example.com
+current-context: k8s.example.com
+users:
+- name: k8s.example.com
+  user:
+    token: ...
+```
+
+it mainly consists of a three sections:
+- clusters, defining the clusters
+- users, defining the users
+- contexts, used to establish relationship between clusters and users
+
+### view configuration
+
+execute command:
+
+```bash
+kubectl config view
+```
+
+outputs the configuration loaded by kubectl.
+
+you can use this command to verify the config loaded by kubectl, usefull when trying to troubleshoot configuration problems.
+
+### view configuration contexts
+
+execute command:
+
+```bash
+kubectl config get-contexts
+```
+
+outputs the available contexts.
+
+### verify kubectl is working
+
+once you have a configuration file, exectue commands:
+
+```bash
+kubectl cluster-info
+```
+
+```bash
+kubectl cluster-info dump
+```
+
+both commands should connect to cluster and print results in the console.
 
 ## working with multiple clusters
 

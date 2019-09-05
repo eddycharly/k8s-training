@@ -6,4 +6,4 @@ it is used to run cluster administrative commands, interact with the cluster, or
 
 ## Topics
 
-- [basics](basics/readme/md)
+- [basics](basics/readme.md)
