@@ -1,10 +1,10 @@
 
 # k8s-training
 
-This repository contains various trainings around kubernetes and the technoligies around it.
+this repository contains various trainings around kubernetes and the tooling around it.
 
-Every training session is meant to be simple and short.
-It should adress only one concern, tool or concept.
+every training session is meant to be simple and short.
+it should adress only one concern, tool or concept.
 
 ## Topics
 
