@@ -79,7 +79,7 @@ refer to the [official documentation](https://kubernetes.io/docs/tasks/tools/ins
 
 in order to connect to a kubernetes cluster, `kubectl` requires a configuration file.
 
-the default location for the configuration file is `$HOME/.kube/config` but it can be overriden of split over several files if you're working with multiple clusters.
+the default location for the configuration file is `$HOME/.kube/config`, but it can be overriden, or split into several files (usefull when working with multiple clusters).
 
 ### kubectl configuration file example
 
@@ -133,6 +133,26 @@ kubectl config get-contexts
 
 outputs the available contexts.
 
+### change configuration file location
+
+although `$HOME/.kube/config` is the default configuration file location, you can put your configuration files wherever you want.
+
+to let kubectl know wich files to load, you will need to define the `KUBECONFIG` environment variable.
+
+execute command:
+
+```bash
+cp $HOME/.kube/config /tmp/cfg-test
+
+export KUBECONFIG=/tmp/cfg-test
+
+kubectl config get-contexts
+
+rm /tmp/cfg-test
+```
+
+outputs the available contexts (using the configuration file `/tmp/cfg-test`).
+
 ### verify kubectl is working
 
 once you have a configuration file, exectue commands:
@@ -148,4 +168,6 @@ kubectl cluster-info dump
 both commands should connect to cluster and print results in the console.
 
 ## working with multiple clusters
+
+the official documentation can be found [here](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/)
 
