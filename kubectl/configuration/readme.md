@@ -149,7 +149,7 @@ users:
     token: token1
 ```
 
-## view configuration
+## kubectl config view
 
 ```bash
 kubectl config view
@@ -180,7 +180,7 @@ users:
     token: token1
 ```
 
-## view configuration contexts
+## kubectl config get-contexts
 
 ```bash
 kubectl config get-contexts
