@@ -6,4 +6,6 @@ it is used to run cluster administrative commands, interact with the cluster, or
 
 ## Topics
 
-- [basics](basics/readme.md)
+- [install](install/readme.md)
+- [configuration](configuration/readme.md)
+- [basic commands](basic-commands/readme.md)
