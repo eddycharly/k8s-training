@@ -66,7 +66,7 @@ add the following line in your `.bash_profile`
 
 restart your terminal
 
-### windows
+## windows
 
 refer to the [official documentation](https://kubernetes.io/docs/tasks/tools/install-kubectl/#optional-kubectl-configurations)
 
@@ -126,7 +126,7 @@ kubectl config --kubeconfig=${CONFIG_FILE} set clusters.${CLUSTER_NAME}.certific
 cat $CONFIG_FILE
 ```
 
-replace `CLUSTER_NAME`, `CLUSTER_SERVER` and `CLUSTER_CA_DATA` with your own cluster values.
+replace `CLUSTER_NAME`, `CLUSTER_SERVER` and `CLUSTER_CA_DATA` with your own cluster values.
 
 ```yaml
 apiVersion: v1
@@ -209,7 +209,7 @@ users:
     token: token1
 ```
 
-### view configuration
+## view configuration
 
 execute command:
 
@@ -242,7 +242,7 @@ users:
     token: token1
 ```
 
-### view configuration contexts
+## view configuration contexts
 
 ```bash
 kubectl config get-contexts
@@ -255,7 +255,7 @@ CURRENT   NAME       CLUSTER    AUTHINFO   NAMESPACE
           context1   cluster1   user1      
 ```
 
-### set current context
+## set current context
 
 ```bash
 kubectl config use-context context1
@@ -269,7 +269,7 @@ CURRENT   NAME       CLUSTER    AUTHINFO   NAMESPACE
 *         context1   cluster1   user1      
 ```
 
-### create a second configuration file
+## create a second configuration file
 
 ```bash
 CONFIG_FILE=$HOME/.kube/cluster2
