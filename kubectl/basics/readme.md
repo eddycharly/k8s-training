@@ -102,14 +102,14 @@ multiple configuration files path are separated by `:`.
 /Users/charlesbreteche/.kube/cluster1:/Users/charlesbreteche/.kube/cluster2
 ```
 
-## add a kubectl configuration files
+## add a kubectl configuration file
 
 ```bash
 export KUBECONFIG=${KUBECONFIG}:$HOME/.kube/cluster1
 ```
 
 this adds `$HOME/.kube/cluster1` file to kubectl.
-
+
 the `KUBECONFIG` environment variable should be set in `.bash_profile` so that it is initialized automatically every time a shell is opened.
 
 ## kubectl config set-cluster
@@ -119,6 +119,7 @@ CONFIG_FILE=$HOME/.kube/cluster1
 CLUSTER_NAME=cluster1
 CLUSTER_SERVER=https://cluster-1.com
 CLUSTER_CA_DATA=toto
+
 kubectl config --kubeconfig=${CONFIG_FILE} set-cluster ${CLUSTER_NAME} --server=${CLUSTER_SERVER}
 kubectl config --kubeconfig=${CONFIG_FILE} set clusters.${CLUSTER_NAME}.certificate-authority-data $(echo ${CLUSTER_CA_DATA} | base64)
 cat $CONFIG_FILE
@@ -146,6 +147,7 @@ users: []
 CONFIG_FILE=$HOME/.kube/cluster1
 USER_NAME=user1
 USER_TOKEN=token1
+
 kubectl config --kubeconfig=${CONFIG_FILE} set-credentials ${USER_NAME} --token ${USER_TOKEN}
 cat $CONFIG_FILE
 ```
@@ -176,6 +178,7 @@ CONFIG_FILE=$HOME/.kube/cluster1
 CONTEXT_NAME=context1
 CONTEXT_CLUSTER=cluster1
 CONTEXT_USER=user1
+
 kubectl config --kubeconfig=${CONFIG_FILE} set-context ${CONTEXT_NAME} --cluster=${CONTEXT_CLUSTER} --user=${CONTEXT_USER}
 cat $CONFIG_FILE
 ```
