@@ -1,8 +1,8 @@
-# k8s-training / kubectl / basics
+# k8s-training / kubectl / configuration
 
 in this training we'll cover kubectl configuration.
 
-## documentation
+## relevant documentation
 - [kubectl configuration](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/)
 
 ## default configuration file location
@@ -217,13 +217,11 @@ CLUSTER_CA_DATA=toto
 USER_NAME=user2
 USER_TOKEN=token2
 CONTEXT_NAME=context2
-CONTEXT_CLUSTER=cluster2
-CONTEXT_USER=user2
 
 kubectl config --kubeconfig=${CONFIG_FILE} set-cluster ${CLUSTER_NAME} --server=${CLUSTER_SERVER}
 kubectl config --kubeconfig=${CONFIG_FILE} set clusters.${CLUSTER_NAME}.certificate-authority-data $(echo ${CLUSTER_CA_DATA} | base64)
 kubectl config --kubeconfig=${CONFIG_FILE} set-credentials ${USER_NAME} --token ${USER_TOKEN}
-kubectl config --kubeconfig=${CONFIG_FILE} set-context ${CONTEXT_NAME} --cluster=${CONTEXT_CLUSTER} --user=${CONTEXT_USER}
+kubectl config --kubeconfig=${CONFIG_FILE} set-context ${CONTEXT_NAME} --cluster=${CLUSTER_NAME} --user=${USER_NAME}
 
 cat $CONFIG_FILE
 ```
@@ -249,7 +247,7 @@ users:
     token: token2
 ```
 
-## add the second configuration file to KUBECONFIG
+## add the second kubectl configuration file
 
 ```bash
 export KUBECONFIG=${KUBECONFIG}:$HOME/.kube/cluster2

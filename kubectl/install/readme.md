@@ -2,9 +2,8 @@
 
 in this training we'll cover kubectl install.
 
-## documentation
+## relevant documentation
 - [kubectl installation procedure](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
-- [kubectl shell autocompletion](https://kubernetes.io/docs/tasks/tools/install-kubectl/#optional-kubectl-configurations)
 
 ## kubectl installation on linux
 
