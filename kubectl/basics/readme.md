@@ -78,7 +78,7 @@ ls -al $HOME/.kube/
 
 the default location for the kubectl configuration file is `$HOME/.kube/config`.
 
-if the `$HOME/.kube/config` file doesn't exist it probably means that didn't configure any cluster yet.
+if the `$HOME/.kube/config` file doesn't exist it probably means that you didn't configure any cluster yet.
 
 ```bash
 total 136
@@ -102,15 +102,20 @@ multiple configuration files path are separated by `:`.
 /Users/charlesbreteche/.kube/cluster1:/Users/charlesbreteche/.kube/cluster2
 ```
 
-## add a kubectl configuration file
+## set first kubectl configuration file
 
 ```bash
-export KUBECONFIG=${KUBECONFIG}:$HOME/.kube/cluster1
+export KUBECONFIG=$HOME/.kube/cluster1
+echo ${KUBECONFIG}
 ```
 
 this adds `$HOME/.kube/cluster1` file to kubectl.
 
 the `KUBECONFIG` environment variable should be set in `.bash_profile` so that it is initialized automatically every time a shell is opened.
+
+```bash
+/Users/charlesbreteche/.kube/cluster1
+```
 
 ## kubectl config set-cluster
 
@@ -211,15 +216,13 @@ users:
 
 ## view configuration
 
-execute command:
-
 ```bash
 kubectl config view
 ```
 
 outputs the configuration loaded by kubectl.
 
-when config is loaded from multiple files, all files are merged together to produce the final configuration files.
+when the configuration is loaded from multiple files, all files are merged together to produce the final configuration.
 
 ```yaml
 apiVersion: v1
@@ -281,10 +284,12 @@ USER_TOKEN=token2
 CONTEXT_NAME=context2
 CONTEXT_CLUSTER=cluster2
 CONTEXT_USER=user2
+
 kubectl config --kubeconfig=${CONFIG_FILE} set-cluster ${CLUSTER_NAME} --server=${CLUSTER_SERVER}
 kubectl config --kubeconfig=${CONFIG_FILE} set clusters.${CLUSTER_NAME}.certificate-authority-data $(echo ${CLUSTER_CA_DATA} | base64)
 kubectl config --kubeconfig=${CONFIG_FILE} set-credentials ${USER_NAME} --token ${USER_TOKEN}
 kubectl config --kubeconfig=${CONFIG_FILE} set-context ${CONTEXT_NAME} --cluster=${CONTEXT_CLUSTER} --user=${CONTEXT_USER}
+
 cat $CONFIG_FILE
 ```
 
@@ -313,9 +318,14 @@ users:
 
 ```bash
 export KUBECONFIG=${KUBECONFIG}:$HOME/.kube/cluster2
+echo ${KUBECONFIG}
 ```
 
 this will append the new `$HOME/.kube/cluster2` configuration file to the `KUBECONFIG` environment variable.
+
+```bash
+/Users/charlesbreteche/.kube/cluster1:/Users/charlesbreteche/.kube/cluster2
+```
 
 ## view kubectl merged configuration
 
