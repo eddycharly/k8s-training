@@ -94,9 +94,13 @@ drwxr-xr-x    3 charlesbreteche  staff     96 10 mai 11:30 cache
 echo ${KUBECONFIG}
 ```
 
-if the `KUBECONFIG` environment variable doesn't exist, the default `$HOME/.kube/config` file is used.
+if the `KUBECONFIG` environment variable doesn't exist, the default `$HOME/.kube/config` file is used.
 
 multiple configuration files path are separated by `:`.
+
+```bash
+/Users/charlesbreteche/.kube/cluster1:/Users/charlesbreteche/.kube/cluster2
+```
 
 ## add a kubectl configuration files
 
