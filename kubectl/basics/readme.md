@@ -35,11 +35,9 @@ you can also install using a package manager (brew, port), please refer to the [
 
 ## kubectl installation on windows
 
-refer to the official documentation
+refer to the [official documentation](https://kubernetes.io/docs/tasks/tools/install-kubectl/).
 
 ## check installation
-
-execute the following command to check install
 
 ```bash
 kubectl version
@@ -72,6 +70,44 @@ restart your terminal
 
 refer to the [official documentation](https://kubernetes.io/docs/tasks/tools/install-kubectl/#optional-kubectl-configurations)
 
+## kubectl configuration file default location
+
+```bash
+ls -al $HOME/.kube/
+```
+
+the default location for the kubectl configuration file is `$HOME/.kube/config`.
+
+if the `$HOME/.kube/config` file doesn't exist it probably means that didn't configure any cluster yet.
+
+```bash
+total 136
+drwxr-xr-x    8 charlesbreteche  staff    256  6 sep 10:05 .
+drwxr-xr-x+  66 charlesbreteche  staff   2112  5 sep 14:03 ..
+drwxr-xr-x    3 charlesbreteche  staff     96 10 mai 11:30 cache
+-rw-------@   1 charlesbreteche  staff  52330  5 sep 15:22 config
+```
+
+## check kubectl configuration files
+
+```bash
+echo ${KUBECONFIG}
+```
+
+if the `KUBECONFIG` environment variable doesn't exist, the default `$HOME/.kube/config` file is used.
+
+multiple configuration files path are separated by `:`.
+
+## add a kubectl configuration files
+
+```bash
+export KUBECONFIG=${KUBECONFIG}:$HOME/.kube/cluster1
+```
+
+this adds `$HOME/.kube/cluster1` file to kubectl.
+
+the `KUBECONFIG` environment variable should be set in `.bash_profile` so that it is initialized automatically every time a shell is opened.
+
 ## kubectl config set-cluster
 
 ```bash
@@ -86,7 +122,7 @@ cat $CONFIG_FILE
 
 replace `CLUSTER_NAME`, `CLUSTER_SERVER` and `CLUSTER_CA_DATA` with your own cluster values.
 
-```bash
+```yaml
 apiVersion: v1
 clusters:
 - cluster:
@@ -112,7 +148,7 @@ cat $CONFIG_FILE
 
 replace `USER_NAME` and `USER_TOKEN` with your own user values.
 
-```bash
+```yaml
 apiVersion: v1
 clusters:
 - cluster:
@@ -129,48 +165,39 @@ users:
     token: token1
 ```
 
-## kubectl configuration default location
+## kubectl config set-context
 
 ```bash
-ls -al $HOME/.kube/
+CONFIG_FILE=$HOME/.kube/cluster1
+CONTEXT_NAME=context1
+CONTEXT_CLUSTER=cluster1
+CONTEXT_USER=user1
+kubectl config --kubeconfig=${CONFIG_FILE} set-context ${CONTEXT_NAME} --cluster=${CONTEXT_CLUSTER} --user=${CONTEXT_USER}
+cat $CONFIG_FILE
 ```
 
-the default location for the kubectl configuration file is `$HOME/.kube/config`.
-
-```bash
-total 136
-drwxr-xr-x    8 charlesbreteche  staff    256  6 sep 10:05 .
-drwxr-xr-x+  66 charlesbreteche  staff   2112  5 sep 14:03 ..
-drwxr-xr-x    3 charlesbreteche  staff     96 10 mai 11:30 cache
--rw-------@   1 charlesbreteche  staff  52330  5 sep 15:22 config
-```
-
-### kubectl configuration file example
+replace `CONTEXT_NAME`, `CONTEXT_CLUSTER` and `CONTEXT_USER` with your own context values.
 
 ```yaml
 apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: dG90bwo=
+    server: https://cluster-1.com
+  name: cluster1
+contexts:
+- context:
+    cluster: cluster1
+    user: user1
+  name: context1
+current-context: ""
 kind: Config
 preferences: {}
-clusters:
-- name: k8s.example.com
-  cluster:
-    certificate-authority-data: ...
-    server: https://k8s.example.com
-contexts:
-- name: k8s.example.com
-  context:
-    cluster: k8s.example.com
-    user: k8s.example.com
 users:
-- name: k8s.example.com
+- name: user1
   user:
-    token: ...
+    token: token1
 ```
-
-it mainly consists of a three sections:
-- clusters, defining the clusters
-- users, defining the users
-- contexts, used to establish relationship between clusters and users
 
 ### view configuration
 
@@ -182,11 +209,30 @@ kubectl config view
 
 outputs the configuration loaded by kubectl.
 
-you can use this command to verify the config loaded by kubectl, usefull when trying to troubleshoot configuration problems.
+when config is loaded from multiple files, all files are merged together to produce the final configuration files.
+
+```yaml
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: DATA+OMITTED
+    server: https://cluster-1.com
+  name: cluster1
+contexts:
+- context:
+    cluster: cluster1
+    user: user1
+  name: context1
+current-context: ""
+kind: Config
+preferences: {}
+users:
+- name: user1
+  user:
+    token: token1
+```
 
 ### view configuration contexts
-
-execute command:
 
 ```bash
 kubectl config get-contexts
@@ -195,180 +241,133 @@ kubectl config get-contexts
 outputs the available contexts.
 
 ```bash
-CURRENT   NAME                             CLUSTER                                AUTHINFO                               NAMESPACE
-*         k8s.dev.agriconomie.com          k8s.dev.agriconomie.com                k8s.dev.agriconomie.com-token          
-          k8s.dev.axereal-appro.com        k8s.dev.axereal-appro.com              k8s.dev.axereal-appro.com-token        
-          k8s.dev.piecesmoinscheres.com    k8s.dev.piecesmoinscheres.com          k8s.dev.piecesmoinscheres.com-token    
-          k8s.prod.axereal-appro.com       k8s.prod.axereal-appro.com             k8s.prod.axereal-appro.com-token       
-          k8s.prod.piecesmoinscheres.com   k8s.prod.piecesmoinscheres.com         k8s.prod.piecesmoinscheres.com-token   
-          k8s.shared.agrico.tech           k8s.shared.agrico.tech                 k8s.shared.agrico.tech-token           
+CURRENT   NAME       CLUSTER    AUTHINFO   NAMESPACE
+          context1   cluster1   user1      
 ```
 
-the current context is indicated the `*` sign in the `CURRENT` column.
-
-### change configuration file location
-
-although `$HOME/.kube/config` is the default configuration file location, you can put your configuration files wherever you want.
-
-to let kubectl know wich files to load, you will need to define the `KUBECONFIG` environment variable.
-
-execute command:
+### set current context
 
 ```bash
-cp $HOME/.kube/config /tmp/cfg-test
-
-export KUBECONFIG=/tmp/cfg-test
-
-kubectl config get-contexts
-
-rm /tmp/cfg-test
-```
-
-outputs the available contexts (using the configuration file `/tmp/cfg-test`).
-
-the `KUBECONFIG` environment variable should be set in your `.bash_profile` so that it is initialized automatically every time a shell is opened.
-
-### verify kubectl is working
-
-once you have a configuration file, exectue commands:
-
-```bash
-kubectl cluster-info
-```
-
-```bash
-kubectl cluster-info dump
-```
-
-both commands should connect to cluster and print results in the console.
-
-## working with multiple clusters
-
-the official documentation can be found [here](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/)
-
-### create two configuration files
-
-create `$HOME/.kube/cluster-1` and `$HOME/.kube/cluster-2` confiduration files.
-
-```yaml
-apiVersion: v1
-kind: Config
-preferences: {}
-clusters:
-- name: cluster-1
-  cluster:
-    certificate-authority-data: dG90bwo=
-    server: https://cluster-1.com
-contexts:
-- name: cluster-1
-  context:
-    cluster: cluster-1
-    user: cluster-1
-users:
-- name: cluster-1
-  user:
-    token: ...
-```
-
-```yaml
-apiVersion: v1
-kind: Config
-preferences: {}
-clusters:
-- name: cluster-2
-  cluster:
-    certificate-authority-data: dG90bwo=
-    server: https://cluster-2.com
-contexts:
-- name: cluster-2
-  context:
-    cluster: cluster-2
-    user: cluster-2
-users:
-- name: cluster-2
-  user:
-    token: ...
-```
-
-### set the KUBECONFIG environment variable
-
-```bash
-export KUBECONFIG=$HOME/.kube/cluster-1:$HOME/.kube/cluster-2
-```
-
-notice that each configuration file is separated by `:`.
-
-### verifiy that both files were loaded by kubectl
-
-```bash
-kubectl config view
+kubectl config use-context context1
 kubectl config get-contexts
 ```
 
-clusters, users and contexts from both files should be listed.
+the current context is set to `context1`, notice the `*` in the `CURRENT` column.
+
+```bash
+CURRENT   NAME       CLUSTER    AUTHINFO   NAMESPACE
+*         context1   cluster1   user1      
+```
+
+### create a second configuration file
+
+```bash
+CONFIG_FILE=$HOME/.kube/cluster2
+CLUSTER_NAME=cluster2
+CLUSTER_SERVER=https://cluster-2.com
+CLUSTER_CA_DATA=toto
+USER_NAME=user2
+USER_TOKEN=token2
+CONTEXT_NAME=context2
+CONTEXT_CLUSTER=cluster2
+CONTEXT_USER=user2
+kubectl config --kubeconfig=${CONFIG_FILE} set-cluster ${CLUSTER_NAME} --server=${CLUSTER_SERVER}
+kubectl config --kubeconfig=${CONFIG_FILE} set clusters.${CLUSTER_NAME}.certificate-authority-data $(echo ${CLUSTER_CA_DATA} | base64)
+kubectl config --kubeconfig=${CONFIG_FILE} set-credentials ${USER_NAME} --token ${USER_TOKEN}
+kubectl config --kubeconfig=${CONFIG_FILE} set-context ${CONTEXT_NAME} --cluster=${CONTEXT_CLUSTER} --user=${CONTEXT_USER}
+cat $CONFIG_FILE
+```
 
 ```yaml
 apiVersion: v1
 clusters:
 - cluster:
-    certificate-authority-data: DATA+OMITTED
-    server: https://cluster-1.com
-  name: cluster-1
-- cluster:
-    certificate-authority-data: DATA+OMITTED
+    certificate-authority-data: dG90bwo=
     server: https://cluster-2.com
-  name: cluster-2
+  name: cluster2
 contexts:
 - context:
-    cluster: cluster-1
-    user: cluster-1
-  name: cluster-1
-- context:
-    cluster: cluster-2
-    user: cluster-2
-  name: cluster-2
+    cluster: cluster2
+    user: user2
+  name: context2
 current-context: ""
 kind: Config
 preferences: {}
 users:
-- name: cluster-1
+- name: user2
   user:
-    token: '...'
-- name: cluster-2
-  user:
-    token: '...'
+    token: token2
 ```
 
+## add the second configuration file to KUBECONFIG
+
 ```bash
-CURRENT   NAME        CLUSTER     AUTHINFO    NAMESPACE
-          cluster-1   cluster-1   cluster-1   
-          cluster-2   cluster-2   cluster-2   
+export KUBECONFIG=${KUBECONFIG}:$HOME/.kube/cluster2
 ```
 
-### switch between contexts
+this will append the new `$HOME/.kube/cluster2` configuration file to the `KUBECONFIG` environment variable.
+
+## view kubectl merged configuration
 
 ```bash
-kubectl config use-context cluster-1
+kubectl config view
+```
+
+the configuration loaded by kubectl is the result of the merge of both `$HOME/.kube/cluster1` and `$HOME/.kube/cluster2` configuration files.
+```yaml
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: DATA+OMITTED
+    server: https://cluster-1.com
+  name: cluster1
+- cluster:
+    certificate-authority-data: DATA+OMITTED
+    server: https://cluster-2.com
+  name: cluster2
+contexts:
+- context:
+    cluster: cluster1
+    user: user1
+  name: context1
+- context:
+    cluster: cluster2
+    user: user2
+  name: context2
+current-context: context1
+kind: Config
+preferences: {}
+users:
+- name: user1
+  user:
+    token: token1
+- name: user2
+  user:
+    token: token2
+```
+
+## check kubectl contexts
+
+```bash
 kubectl config get-contexts
 ```
 
-the cluster-1 context should be the current context.
-
 ```bash
-CURRENT   NAME        CLUSTER     AUTHINFO    NAMESPACE
-*         cluster-1   cluster-1   cluster-1   
-          cluster-2   cluster-2   cluster-2   
+CURRENT   NAME       CLUSTER    AUTHINFO   NAMESPACE
+*         context1   cluster1   user1      
+          context2   cluster2   user2      
 ```
 
+## switch context
+
 ```bash
-kubectl config use-context cluster-2
+kubectl config use-context context2
 kubectl config get-contexts
 ```
 
-the cluster-2 context should be the current context.
-
+the current context has changed from context1 to context2.
 ```bash
-CURRENT   NAME        CLUSTER     AUTHINFO    NAMESPACE
-          cluster-1   cluster-1   cluster-1   
-*         cluster-2   cluster-2   cluster-2   
+CURRENT   NAME       CLUSTER    AUTHINFO   NAMESPACE
+          context1   cluster1   user1      
+*         context2   cluster2   user2      
 ```
