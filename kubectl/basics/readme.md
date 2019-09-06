@@ -44,7 +44,7 @@ execute the following command to check install
 kubectl version
 ```
 
-if the command executes, install was successfull, even if errors appear.
+if the command executes, install was successfull, even if errors apear.
 we will have to configure `kubectl` before it order to get it to work.
 
 ## kubectl bash auto completion
@@ -99,7 +99,6 @@ contexts:
   context:
     cluster: k8s.example.com
     user: k8s.example.com
-current-context: k8s.example.com
 users:
 - name: k8s.example.com
   user:
@@ -133,6 +132,18 @@ kubectl config get-contexts
 
 outputs the available contexts.
 
+```bash
+CURRENT   NAME                             CLUSTER                                AUTHINFO                               NAMESPACE
+*         k8s.dev.agriconomie.com          k8s.dev.agriconomie.com                k8s.dev.agriconomie.com-token          
+          k8s.dev.axereal-appro.com        k8s.dev.axereal-appro.com              k8s.dev.axereal-appro.com-token        
+          k8s.dev.piecesmoinscheres.com    k8s.dev.piecesmoinscheres.com          k8s.dev.piecesmoinscheres.com-token    
+          k8s.prod.axereal-appro.com       k8s.prod.axereal-appro.com             k8s.prod.axereal-appro.com-token       
+          k8s.prod.piecesmoinscheres.com   k8s.prod.piecesmoinscheres.com         k8s.prod.piecesmoinscheres.com-token   
+          k8s.shared.agrico.tech           k8s.shared.agrico.tech                 k8s.shared.agrico.tech-token           
+```
+
+the current context is indicated the `*` sign in the `CURRENT` column.
+
 ### change configuration file location
 
 although `$HOME/.kube/config` is the default configuration file location, you can put your configuration files wherever you want.
@@ -153,6 +164,8 @@ rm /tmp/cfg-test
 
 outputs the available contexts (using the configuration file `/tmp/cfg-test`).
 
+the `KUBECONFIG` environment variable should be set in your `.bash_profile` so that it is initialized automatically every time a shell is opened.
+
 ### verify kubectl is working
 
 once you have a configuration file, exectue commands:
@@ -171,3 +184,129 @@ both commands should connect to cluster and print results in the console.
 
 the official documentation can be found [here](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/)
 
+### create two configuration files
+
+create `$HOME/.kube/cluster-1` and `$HOME/.kube/cluster-2` confiduration files.
+
+```yaml
+apiVersion: v1
+kind: Config
+preferences: {}
+clusters:
+- name: cluster-1
+  cluster:
+    certificate-authority-data: dG90bwo=
+    server: https://cluster-1.com
+contexts:
+- name: cluster-1
+  context:
+    cluster: cluster-1
+    user: cluster-1
+users:
+- name: cluster-1
+  user:
+    token: ...
+```
+
+```yaml
+apiVersion: v1
+kind: Config
+preferences: {}
+clusters:
+- name: cluster-2
+  cluster:
+    certificate-authority-data: dG90bwo=
+    server: https://cluster-2.com
+contexts:
+- name: cluster-2
+  context:
+    cluster: cluster-2
+    user: cluster-2
+users:
+- name: cluster-2
+  user:
+    token: ...
+```
+
+### set the KUBECONFIG environment variable
+
+```bash
+export KUBECONFIG=$HOME/.kube/cluster-1:$HOME/.kube/cluster-2
+```
+
+notice that each configuration file is separated by `:`.
+
+### verifiy that both files were loaded by kubectl
+
+```bash
+kubectl config view
+kubectl config get-contexts
+```
+
+clusters, users and contexts from both files should be listed.
+
+```yaml
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: DATA+OMITTED
+    server: https://cluster-1.com
+  name: cluster-1
+- cluster:
+    certificate-authority-data: DATA+OMITTED
+    server: https://cluster-2.com
+  name: cluster-2
+contexts:
+- context:
+    cluster: cluster-1
+    user: cluster-1
+  name: cluster-1
+- context:
+    cluster: cluster-2
+    user: cluster-2
+  name: cluster-2
+current-context: ""
+kind: Config
+preferences: {}
+users:
+- name: cluster-1
+  user:
+    token: '...'
+- name: cluster-2
+  user:
+    token: '...'
+```
+
+```bash
+CURRENT   NAME        CLUSTER     AUTHINFO    NAMESPACE
+          cluster-1   cluster-1   cluster-1   
+          cluster-2   cluster-2   cluster-2   
+```
+
+### switch between contexts
+
+```bash
+kubectl config use-context cluster-1
+kubectl config get-contexts
+```
+
+the cluster-1 context should be the current context.
+
+```bash
+CURRENT   NAME        CLUSTER     AUTHINFO    NAMESPACE
+*         cluster-1   cluster-1   cluster-1   
+          cluster-2   cluster-2   cluster-2   
+```
+
+```bash
+kubectl config use-context cluster-2
+kubectl config get-contexts
+```
+
+the cluster-2 context should be the current context.
+
+```bash
+CURRENT   NAME        CLUSTER     AUTHINFO    NAMESPACE
+          cluster-1   cluster-1   cluster-1   
+*         cluster-2   cluster-2   cluster-2   
+```
