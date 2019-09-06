@@ -125,7 +125,7 @@ kubectl config --kubeconfig=${CONFIG_FILE} set clusters.${CLUSTER_NAME}.certific
 cat $CONFIG_FILE
 ```
 
-replace `CLUSTER_NAME`, `CLUSTER_SERVER` and `CLUSTER_CA_DATA` with your own cluster values.
+replace `CLUSTER_NAME`, `CLUSTER_SERVER` and `CLUSTER_CA_DATA` with your own cluster values.
 
 ```yaml
 apiVersion: v1
@@ -152,7 +152,7 @@ kubectl config --kubeconfig=${CONFIG_FILE} set-credentials ${USER_NAME} --token 
 cat $CONFIG_FILE
 ```
 
-replace `USER_NAME` and `USER_TOKEN` with your own user values.
+replace `USER_NAME` and `USER_TOKEN` with your own user values.
 
 ```yaml
 apiVersion: v1
