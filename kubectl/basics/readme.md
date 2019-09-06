@@ -122,6 +122,7 @@ CLUSTER_CA_DATA=toto
 
 kubectl config --kubeconfig=${CONFIG_FILE} set-cluster ${CLUSTER_NAME} --server=${CLUSTER_SERVER}
 kubectl config --kubeconfig=${CONFIG_FILE} set clusters.${CLUSTER_NAME}.certificate-authority-data $(echo ${CLUSTER_CA_DATA} | base64)
+
 cat $CONFIG_FILE
 ```
 
@@ -149,6 +150,7 @@ USER_NAME=user1
 USER_TOKEN=token1
 
 kubectl config --kubeconfig=${CONFIG_FILE} set-credentials ${USER_NAME} --token ${USER_TOKEN}
+
 cat $CONFIG_FILE
 ```
 
@@ -180,10 +182,11 @@ CONTEXT_CLUSTER=cluster1
 CONTEXT_USER=user1
 
 kubectl config --kubeconfig=${CONFIG_FILE} set-context ${CONTEXT_NAME} --cluster=${CONTEXT_CLUSTER} --user=${CONTEXT_USER}
+
 cat $CONFIG_FILE
 ```
 
-replace `CONTEXT_NAME`, `CONTEXT_CLUSTER` and `CONTEXT_USER` with your own context values.
+replace `CONTEXT_NAME`, `CONTEXT_CLUSTER` and `CONTEXT_USER` with your own context values.
 
 ```yaml
 apiVersion: v1
