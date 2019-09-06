@@ -8,11 +8,12 @@ we will go through:
 - working with multiple clusters
 - basic commands
 
-## kubectl installation
+## documentation
+- [kubectl installation procedure](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+- [kubectl shell autocompletion](https://kubernetes.io/docs/tasks/tools/install-kubectl/#optional-kubectl-configurations)
+- [kubectl configuration](https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/)
 
-the installation procedure is described [here](https://kubernetes.io/docs/tasks/tools/install-kubectl/).
-
-### linux
+## kubectl installation on linux
 
 ```bash
 curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
@@ -22,7 +23,7 @@ sudo mv ./kubectl /usr/local/bin/kubectl
 
 given the distribution you're using you can also install using a package manager (apt-get, yum, snap), please refer to the [official documentation](https://kubernetes.io/docs/tasks/tools/install-kubectl/).
 
-### mac
+## kubectl installation on mac
 
 ```bash
 curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/darwin/amd64/kubectl
@@ -32,7 +33,7 @@ sudo mv ./kubectl /usr/local/bin/kubectl
 
 you can also install using a package manager (brew, port), please refer to the [official documentation](https://kubernetes.io/docs/tasks/tools/install-kubectl/).
 
-### windows
+## kubectl installation on windows
 
 refer to the official documentation
 
@@ -47,15 +48,11 @@ kubectl version
 if the command executes, install was successfull, even if errors apear.
 we will have to configure `kubectl` before it order to get it to work.
 
-## kubectl bash auto completion
-
-the installation procedure is described [here](https://kubernetes.io/docs/tasks/tools/install-kubectl/#optional-kubectl-configurations).
-
-### linux
+## kubectl bash auto completion on linux
 
 refer to the [official documentation](https://kubernetes.io/docs/tasks/tools/install-kubectl/#optional-kubectl-configurations)
 
-## mac
+## kubectl bash auto completion on mac
 
 ```bash
 brew install bash-completion
@@ -63,27 +60,92 @@ kubectl completion bash > $(brew --prefix)/etc/bash_completion.d/kubectl
 chmod +x /usr/local/etc/bash_completion.d/kubectl
 ```
 
-and add the following line in your `.bash_profile`
+add the following line in your `.bash_profile`
 
 ```bash
 [[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
 ```
 
-then restart your terminal
+restart your terminal
 
 ### windows
 
 refer to the [official documentation](https://kubernetes.io/docs/tasks/tools/install-kubectl/#optional-kubectl-configurations)
 
-## kubectl configuration
+## kubectl config set-cluster
 
-in order to connect to a kubernetes cluster, `kubectl` requires a configuration file.
+```bash
+CONFIG_FILE=$HOME/.kube/cluster1
+CLUSTER_NAME=cluster1
+CLUSTER_SERVER=https://cluster-1.com
+CLUSTER_CA_DATA=toto
+kubectl config --kubeconfig=${CONFIG_FILE} set-cluster ${CLUSTER_NAME} --server=${CLUSTER_SERVER}
+kubectl config --kubeconfig=${CONFIG_FILE} set clusters.${CLUSTER_NAME}.certificate-authority-data $(echo ${CLUSTER_CA_DATA} | base64)
+cat $CONFIG_FILE
+```
 
-the default location for the configuration file is `$HOME/.kube/config`, but it can be overriden, or split into several files (usefull when working with multiple clusters).
+replace `CLUSTER_NAME`, `CLUSTER_SERVER` and `CLUSTER_CA_DATA` with your own cluster values.
+
+```bash
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: dG90bwo=
+    server: https://cluster-1.com
+  name: cluster1
+contexts: []
+current-context: ""
+kind: Config
+preferences: {}
+users: []
+```
+
+## kubectl config set-user
+
+```bash
+CONFIG_FILE=$HOME/.kube/cluster1
+USER_NAME=user1
+USER_TOKEN=token1
+kubectl config --kubeconfig=${CONFIG_FILE} set-credentials ${USER_NAME} --token ${USER_TOKEN}
+cat $CONFIG_FILE
+```
+
+replace `USER_NAME` and `USER_TOKEN` with your own user values.
+
+```bash
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: dG90bwo=
+    server: https://cluster-1.com
+  name: cluster1
+contexts: []
+current-context: ""
+kind: Config
+preferences: {}
+users:
+- name: user1
+  user:
+    token: token1
+```
+
+## kubectl configuration default location
+
+```bash
+ls -al $HOME/.kube/
+```
+
+the default location for the kubectl configuration file is `$HOME/.kube/config`.
+
+```bash
+total 136
+drwxr-xr-x    8 charlesbreteche  staff    256  6 sep 10:05 .
+drwxr-xr-x+  66 charlesbreteche  staff   2112  5 sep 14:03 ..
+drwxr-xr-x    3 charlesbreteche  staff     96 10 mai 11:30 cache
+-rw-------@   1 charlesbreteche  staff  52330  5 sep 15:22 config
+```
 
 ### kubectl configuration file example
-
-the layout of the configuration file is as follows.
 
 ```yaml
 apiVersion: v1
