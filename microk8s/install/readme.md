@@ -23,7 +23,7 @@ dowload and install `multipass` from the [official multipass website](https://mu
 ## create an ubuntu virtual machine with multipass
 
 ```bash
-multipass launch --name microk8s-vm --mem 4G --disk 40G
+multipass launch --name microk8s-vm --cpus 2 --mem 4G --disk 40G
 ```
 
 this will download an ubuntu image locally and start a virtual machine named microk8s-vm, running ubuntu with 4 gigabytes memory and 40 gigabytes disk.
@@ -196,8 +196,8 @@ select the `$HOME/.kube/microk8s` configuration file and click the `SIGN IN` but
 ## stop/start microk8s
 
 ```bash
-multipass exec microk8s-vm -- microk8s.stop
-multipass exec microk8s-vm -- microk8s.start
+multipass exec microk8s-vm -- sudo microk8s.stop
+multipass exec microk8s-vm -- sudo microk8s.start
 ```
 
 this will stop/start `microk8s`.
@@ -207,8 +207,8 @@ the underlying virtual machine is still running though, you need to use `multipa
 ## remove microk8s
 
 ```bash
-multipass exec microk8s-vm -- microk8s.reset
-multipass exec microk8s-vm -- snap remove microk8s
+multipass exec microk8s-vm -- sudo microk8s.reset
+multipass exec microk8s-vm -- sudo snap remove microk8s
 ```
 
 this will stop all pods running and remove `microk8s`.
