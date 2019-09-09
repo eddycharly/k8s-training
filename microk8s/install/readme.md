@@ -20,13 +20,16 @@ if trying to install `microk8s`on linux, you can try to install directly on your
 
 dowload and install `multipass` from the [official multipass website](https://multipass.run/#install).
 
+alternatively, you can use brew or snap package managers on respectively macos or linux.
+refer to the multipass [official documentation](https://github.com/CanonicalLtd/multipass#install-multipass)
+
 ## create an ubuntu virtual machine with multipass
 
 ```bash
 multipass launch --name microk8s-vm --cpus 2 --mem 4G --disk 40G
 ```
 
-this will download an ubuntu image locally and start a virtual machine named microk8s-vm, running ubuntu with 4 gigabytes memory and 40 gigabytes disk.
+this will download an ubuntu image locally and start a virtual machine named microk8s-vm, running ubuntu with 2 cpus, 4 gigabytes memory and 40 gigabytes disk.
 
 ## multipass list
 
