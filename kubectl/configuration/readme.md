@@ -82,7 +82,7 @@ preferences: {}
 users: []
 ```
 
-## kubectl config set-user
+## kubectl config set-credentials
 
 ```bash
 CONFIG_FILE=$HOME/.kube/cluster1
