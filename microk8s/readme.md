@@ -7,4 +7,3 @@ it is the closest solution to a real world cluster.
 ## Topics
 
 - [install](install/readme.md)
-- [configuration](configuration/readme.md)
