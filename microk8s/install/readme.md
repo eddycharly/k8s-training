@@ -233,6 +233,14 @@ mk8s_create() {
     multipass launch --name $NAME --cpus $CPU --mem $MEMORY --disk $DISK
     multipass exec $NAME -- sudo snap install microk8s --classic --channel=$K8S
     multipass exec $NAME -- sudo iptables -P FORWARD ACCEPT
+    multipass exec $NAME -- sudo microk8s.status --wait-ready
+    multipass exec $NAME -- /snap/bin/microk8s.config > $HOME/.kube/$NAME
+    multipass exec $NAME -- /snap/bin/microk8s.enable dns dashboard storage ingress
+
+    local ACCOUNT=$(kubectl --kubeconfig=$HOME/.kube/$NAME get serviceaccount kubernetes-dashboard -n kube-system -o jsonpath='{.secrets[0].name}')
+    local TOKEN=$(kubectl --kubeconfig=$HOME/.kube/$NAME get secret $ACCOUNT -n kube-system -o jsonpath='{.data.token}' | base64 --decode)
+    kubectl --kubeconfig=$HOME/.kube/$NAME config set-credentials dashboard --token ${TOKEN}
+    kubectl --kubeconfig=$HOME/.kube/$NAME config set-context dashboard --cluster=microk8s-cluster --user=dashboard
 }
 
 mk8s_start() {
@@ -256,4 +264,5 @@ mk8s_delete() {
     multipass exec $NAME -- sudo snap remove microk8s
     multipass delete $NAME
     multipass purge
+    rm $HOME/.kube/$NAME
 }
