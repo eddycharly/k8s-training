@@ -223,6 +223,7 @@ the underlying virtual machine is still running though, you need to use `multipa
 
 ## bash functions to help start/stop/create/delete microk8s instances
 
+```bash
 mk8s_create() {
     local NAME=${1:-microk8s-vm}
     local K8S=${2:-1.13/stable}
@@ -242,21 +243,27 @@ mk8s_create() {
     kubectl --kubeconfig=$HOME/.kube/$NAME config set-credentials dashboard --token ${TOKEN}
     kubectl --kubeconfig=$HOME/.kube/$NAME config set-context dashboard --cluster=microk8s-cluster --user=dashboard
 }
+```
 
+```bash
 mk8s_start() {
     local NAME=${1:-microk8s-vm}
 
     multipass start $NAME
     multipass exec $NAME -- sudo microk8s.start
 }
+```
 
+```bash
 mk8s_stop() {
     local NAME=${1:-microk8s-vm}
 
     multipass exec $NAME -- sudo microk8s.stop
     multipass stop $NAME
 }
+```
 
+```bash
 mk8s_delete() {
     local NAME=${1:-microk8s-vm}
 
@@ -266,3 +273,4 @@ mk8s_delete() {
     multipass purge
     rm $HOME/.kube/$NAME
 }
+```
