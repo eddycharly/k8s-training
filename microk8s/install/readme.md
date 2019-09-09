@@ -200,6 +200,9 @@ select the `$HOME/.kube/microk8s` configuration file and click the `SIGN IN` but
 
 ```bash
 multipass exec microk8s-vm -- sudo microk8s.stop
+```
+
+```bash
 multipass exec microk8s-vm -- sudo microk8s.start
 ```
 
@@ -218,4 +221,39 @@ this will stop all pods running and remove `microk8s`.
 
 the underlying virtual machine is still running though, you need to use `multipass` commands to start/stop the `multipass` virtual machine.
 
-http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login
+## bash functions to help start/stop/create/delete microk8s instances
+
+mk8s_create() {
+    local NAME=${1:-microk8s-vm}
+    local K8S=${2:-1.13/stable}
+    local CPU=${3:-2}
+    local MEMORY=${4:-4G}
+    local DISK=${5:-40G}
+
+    multipass launch --name $NAME --cpus $CPU --mem $MEMORY --disk $DISK
+    multipass exec $NAME -- sudo snap install microk8s --classic --channel=$K8S
+    multipass exec $NAME -- sudo iptables -P FORWARD ACCEPT
+}
+
+mk8s_start() {
+    local NAME=${1:-microk8s-vm}
+
+    multipass start $NAME
+    multipass exec $NAME -- sudo microk8s.start
+}
+
+mk8s_stop() {
+    local NAME=${1:-microk8s-vm}
+
+    multipass exec $NAME -- sudo microk8s.stop
+    multipass stop $NAME
+}
+
+mk8s_delete() {
+    local NAME=${1:-microk8s-vm}
+
+    multipass exec $NAME -- sudo microk8s.reset
+    multipass exec $NAME -- sudo snap remove microk8s
+    multipass delete $NAME
+    multipass purge
+}
