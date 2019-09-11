@@ -14,7 +14,7 @@ additionnaly, `microk8s` is distributed through snap so we may have to install s
 
 `multipass` let's you run an ubuntu virtual machine easily.
 
-if trying to install `microk8s`on macos or windows, you will to install `multipass`.
+if trying to install `microk8s`on macos or windows, you will have to install `multipass`.
 
 if trying to install `microk8s`on linux, you can try to install directly on your local machine but it's not guaranteed to work out of the box.
 
