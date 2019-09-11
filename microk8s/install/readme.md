@@ -52,23 +52,6 @@ multipass shell microk8s-vm
 
 opens a shell inside a virtual machine.
 
-## multipass stop
-
-```bash
-multipass stop microk8s-vm
-```
-
-shutdowns a virtual machine.
-
-## multipass delete
-
-```bash
-multipass delete microk8s-vm
-multipass purge
-```
-
-deletes a virtual machine.
-
 ## install microk8s on the multipass virtual machine
 
 ```bash
@@ -220,6 +203,23 @@ multipass exec microk8s-vm -- sudo snap remove microk8s
 this will stop all pods running and remove `microk8s`.
 
 the underlying virtual machine is still running though, you need to use `multipass` commands to start/stop the `multipass` virtual machine.
+
+## multipass stop
+
+```bash
+multipass stop microk8s-vm
+```
+
+shutdowns a virtual machine.
+
+## multipass delete
+
+```bash
+multipass delete microk8s-vm
+multipass purge
+```
+
+deletes a virtual machine.
 
 ## bash functions to help start/stop/create/delete microk8s instances
 
