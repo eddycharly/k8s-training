@@ -72,6 +72,8 @@ this uses the declarative aproach, resources are declared in files using yaml sy
 
 kubernetes will take actions to reach the desired state declared in the yaml manifests.
 
+[manifest](scratch.yaml)
+
 ```bash
 namespace/scratch created
 ```
@@ -84,6 +86,8 @@ kubectl apply -f http://raw.github.com/eddycharly/k8s-training/master/k8s-resour
 
 updates namespace named `scratch` using the declarative aproach.
 
+[manifest](scratch-with-labels.yaml)
+
 ```bash
 namespace/scratch configured
 ```
@@ -95,6 +99,8 @@ kubectl delete -f http://raw.github.com/eddycharly/k8s-training/master/k8s-resou
 ```
 
 deletes the namespace named `scratch` using the declarative aproach.
+
+[manifest](scratch.yaml)
 
 ```bash
 namespace "scratch" deleted
