@@ -52,7 +52,7 @@ namespace/scratch created
 kubectl delete namespace scratch
 ```
 
-deletes a namespace named `scratch`.
+deletes the namespace named `scratch`.
 
 when a namespace is deleted, all resources bound to the deleted namespace are also deleted?
 
@@ -60,8 +60,42 @@ when a namespace is deleted, all resources bound to the deleted namespace are al
 namespace "scratch" deleted
 ```
 
+## kubectl create
+
+```bash
+kubectl create -f http://raw.github.com/eddycharly/k8s-training/master/k8s-resources/namespaces/scratch.yaml
+```
+
+creates a namespace named `scratch`.
+
+this uses the declarative aproach, resources are declared in files using yaml syntax.
+
+kubernetes will take actions to reach the desired state declared in the yaml manifests.
+
+```bash
+namespace/scratch created
+```
+
 ## kubectl apply
 
 ```bash
-kubectl apply -f http://raw.github.com/eddycharly/k8s-training/k8s-resources/namespaces/scratch.yaml
+kubectl apply -f http://raw.github.com/eddycharly/k8s-training/master/k8s-resources/namespaces/scratch-with-labels.yaml
+```
+
+updates namespace named `scratch` using the declarative aproach.
+
+```bash
+namespace/scratch created
+```
+
+## kubectl delete
+
+```bash
+kubectl delete -f http://raw.github.com/eddycharly/k8s-training/master/k8s-resources/namespaces/scratch.yaml
+```
+
+deletes the namespace named `scratch` using the declarative aproach.
+
+```bash
+namespace "scratch" deleted
 ```

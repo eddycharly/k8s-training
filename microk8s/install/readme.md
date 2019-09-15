@@ -1,6 +1,9 @@
 # k8s-training / microk8s / install
 
 in this training we'll cover `microk8s` install.
+the cluster that will be deployed will use the 1.13 version of kubernetes.
+
+the latest kubernetes version supported by `microk8s` is currently 1.15, if you try to deploy a 1.15 cluster additionnal steps will need to be applied.
 
 in order to run, `microk8s` requires a linux os, that's why we will install a virtual machine when running on mac or windows.
 
