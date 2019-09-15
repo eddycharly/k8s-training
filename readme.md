@@ -10,3 +10,4 @@ it should adress only one concern, tool or concept.
 
 - [kubectl](kubectl/readme.md)
 - [microk8s](microk8s/readme.md)
+- [k8s resources](k8s-resources/readme.md)

@@ -1,6 +1,6 @@
 # k8s-training / kubectl / install
 
-in this training we'll cover kubectl install.
+in this training we'll cover `kubectl` install.
 
 ## relevant documentation
 - [kubectl installation procedure](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
