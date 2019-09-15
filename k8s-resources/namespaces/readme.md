@@ -85,7 +85,7 @@ kubectl apply -f http://raw.github.com/eddycharly/k8s-training/master/k8s-resour
 updates namespace named `scratch` using the declarative aproach.
 
 ```bash
-namespace/scratch created
+namespace/scratch configured
 ```
 
 ## kubectl delete
