@@ -63,7 +63,7 @@ namespace "scratch" deleted
 ## kubectl create
 
 ```bash
-cat <<EOT >> namespace.yaml
+cat <<EOT > namespace.yaml
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -88,7 +88,7 @@ namespace/scratch created
 ## kubectl apply
 
 ```bash
-cat <<EOT >> namespace.yaml
+cat <<EOT > namespace.yaml
 apiVersion: v1
 kind: Namespace
 metadata:

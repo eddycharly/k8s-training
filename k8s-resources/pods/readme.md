@@ -53,11 +53,11 @@ kube-system   monitoring-influxdb-grafana-v4-6679c46745-tltn9   2/2     Running 
 ## deploy pod manifest
 
 ```bash
-cat <<EOT >> pod.yaml
+cat <<EOT > pod.yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: mariadb
+  name: pod-training
   namespace: scratch
 spec:
   containers:
@@ -89,17 +89,17 @@ it will also allow trafic on the port 3306.
 the pod will be bound to the `scratch` namespace.
 
 ```bash
-pod/mariadb created
+pod/pod-training created
 ```
 
 ## pod labels
 
 ```bash
-cat <<EOT >> pod.yaml
+cat <<EOT > pod.yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: mariadb
+  name: pod-training
   namespace: scratch
   labels:
     app: mariadb
@@ -132,11 +132,11 @@ labels are identiying information, they are used to identify a set of resources.
 ## pod annotations
 
 ```bash
-cat <<EOT >> pod.yaml
+cat <<EOT > pod.yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: mariadb
+  name: pod-training
   namespace: scratch
   annotations:
     deployed-by: someone
@@ -169,11 +169,11 @@ annotations are non identiying information, they are used to attach metadata to 
 ## pod with two containers
 
 ```bash
-cat <<EOT >> pod.yaml
+cat <<EOT > pod.yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: double
+  name: pod-training
   namespace: scratch
   labels:
     app: double
