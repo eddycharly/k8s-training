@@ -13,7 +13,7 @@ all the trainings below assume you have a running `microk8s` cluster.
 open a new terminal and set the `KUBECONFIG` environment variable to point to your `microk8s` config file.
 
 ```bash
-export KUBECONFIG=$HOME/.kube/microk8s
+export KUBECONFIG=$HOME/.kube/microk8s-vm
 ```
 
 ## Topics
