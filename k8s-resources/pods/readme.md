@@ -173,8 +173,10 @@ cat <<EOT >> pod.yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: mariadb
+  name: double
   namespace: scratch
+  labels:
+    app: double
 spec:
   containers:
     - name: mariadb
@@ -205,6 +207,61 @@ this will deploy a pod with two containers.
 one container running mariadb and another container running nginx.
 these containers will always be co-located and co-scheduled.
 one can communicate with another by using `localhost`.
+
+## connect to the pod containers
+
+```bash
+kubectl exec -it -n scratch $(kubectl get pod -n scratch -l app=double -o jsonpath='{.items[0].metadata.name}') -c mariadb -- bash
+```
+
+this will open a bash terminal running in the mariadb container.
+notice how we use labels here to identify the pod we are targeting.
+
+```bash
+mysql -uroot -prootpassword
+```
+
+this will open a connection to the mariadb engine.
+
+```bash
+apt-get update
+apt-get install -y curl
+
+curl localhost
+```
+
+this will install curl in the mariadb container and will perform an http GET on localhost.
+the output should show the nginx default welcome page.
+
+this illustrates how two containers in the same pod can communicate through localhost.
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+```
 
 ## delete pod
 

@@ -58,6 +58,8 @@ opens a shell inside a virtual machine.
 ## install microk8s on the multipass virtual machine
 
 ```bash
+multipass exec microk8s-vm -- sudo systemctl disable apparmor.service --now
+multipass exec microk8s-vm -- sudo service apparmor teardown
 multipass exec microk8s-vm -- sudo snap install microk8s --classic --channel=1.13/stable
 multipass exec microk8s-vm -- sudo iptables -P FORWARD ACCEPT
 ```
@@ -235,16 +237,23 @@ mk8s_create() {
     local DISK=${5:-40G}
 
     multipass launch --name $NAME --cpus $CPU --mem $MEMORY --disk $DISK
+
     multipass exec $NAME -- sudo snap install microk8s --classic --channel=$K8S
-    multipass exec $NAME -- sudo iptables -P FORWARD ACCEPT
     multipass exec $NAME -- sudo microk8s.status --wait-ready
     multipass exec $NAME -- /snap/bin/microk8s.config > $HOME/.kube/$NAME
     multipass exec $NAME -- /snap/bin/microk8s.enable dns dashboard storage ingress
 
+    multipass exec microk8s-vm -- sudo systemctl disable apparmor.service --now
+    multipass exec microk8s-vm -- sudo service apparmor teardown
+    multipass exec $NAME -- sudo iptables -F
+    multipass exec $NAME -- sudo iptables -P FORWARD ACCEPT
+ 
     local ACCOUNT=$(kubectl --kubeconfig=$HOME/.kube/$NAME get serviceaccount kubernetes-dashboard -n kube-system -o jsonpath='{.secrets[0].name}')
     local TOKEN=$(kubectl --kubeconfig=$HOME/.kube/$NAME get secret $ACCOUNT -n kube-system -o jsonpath='{.data.token}' | base64 --decode)
     kubectl --kubeconfig=$HOME/.kube/$NAME config set-credentials dashboard --token ${TOKEN}
     kubectl --kubeconfig=$HOME/.kube/$NAME config set-context dashboard --cluster=microk8s-cluster --user=dashboard
+
+    export KUBECONFIG=$HOME/.kube/$NAME
 }
 ```
 
