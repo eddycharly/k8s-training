@@ -20,5 +20,5 @@ export KUBECONFIG=$HOME/.kube/microk8s
 
 - [namespaces](namespaces/readme.md)
 - [pods](pods/readme.md)
-- [deployments](deployments/readme.md)
 - [services](services/readme.md)
+- [deployments](deployments/readme.md)
