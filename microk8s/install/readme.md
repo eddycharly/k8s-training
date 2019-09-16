@@ -243,8 +243,8 @@ mk8s_create() {
     multipass exec $NAME -- /snap/bin/microk8s.config > $HOME/.kube/$NAME
     multipass exec $NAME -- /snap/bin/microk8s.enable dns dashboard storage ingress
 
-    multipass exec microk8s-vm -- sudo systemctl disable apparmor.service --now
-    multipass exec microk8s-vm -- sudo service apparmor teardown
+    multipass exec $NAME -- sudo systemctl disable apparmor.service --now
+    multipass exec $NAME -- sudo service apparmor teardown
     multipass exec $NAME -- sudo iptables -F
     multipass exec $NAME -- sudo iptables -P FORWARD ACCEPT
  
