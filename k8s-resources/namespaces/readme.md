@@ -54,7 +54,7 @@ kubectl delete namespace scratch
 
 deletes the namespace named `scratch`.
 
-when a namespace is deleted, all resources bound to the deleted namespace are also deleted?
+when a namespace is deleted, all resources bound to the deleted namespace are also deleted.
 
 ```bash
 namespace "scratch" deleted
