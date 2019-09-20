@@ -240,7 +240,7 @@ mk8s_create() {
 
     multipass exec $NAME -- sudo snap install microk8s --classic --channel=$K8S
     multipass exec $NAME -- sudo microk8s.status --wait-ready
-    multipass exec $NAME -- /snap/bin/microk8s.config > $HOME/.kube/$NAME
+    multipass exec $NAME -- sudo /snap/bin/microk8s.config > $HOME/.kube/$NAME
     multipass exec $NAME -- sudo /snap/bin/microk8s.enable dns storage
 
     export KUBECONFIG=$HOME/.kube/$NAME
